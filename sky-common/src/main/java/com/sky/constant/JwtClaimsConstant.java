@@ -1,5 +1,8 @@
 package com.sky.constant;
 
+/**
+ * JWT的Claims常量类
+ */
 public class JwtClaimsConstant {
 
     public static final String EMP_ID = "empId";
