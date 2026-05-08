@@ -93,7 +93,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.save(employee);
     }
 
-
+    /**
+     * 分页查询
+     *
+     * @param employeePageQueryDTO
+     * @return
+     */
     @Override
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         //1、开始分页查询
@@ -119,6 +124,37 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .id(id)
                 .build();
 
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 根据id查询员工信息
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Employee queryById(Long id) {
+        Employee employee = employeeMapper.queryById(id);
+        employee.setPassword("****");
+        return employee;
+    }
+
+    /**
+     * 编辑员工信息
+     *
+     * @param employeeDTO
+     */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        //1、创建一个员工对象
+        Employee employee = new Employee();
+        //2、将参数员工对象属性复制到当前对象
+        BeanUtils.copyProperties(employeeDTO, employee);
+        //3、设置修改时间、修改人
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        //4、执行修改
         employeeMapper.update(employee);
     }
 
