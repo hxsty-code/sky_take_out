@@ -82,13 +82,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置账号状态
         employee.setStatus(StatusConstant.ENABLE);
 
-        //设置创建、修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        //设置创建人、修改人(从当前线程的LocalThread中获取当前登录用户的ID)
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        //设置创建、修改时间
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//
+//        //设置创建人、修改人(从当前线程的LocalThread中获取当前登录用户的ID)
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.save(employee);
     }
@@ -121,6 +121,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void startOrStop(Integer status, Long id) {
         Employee employee = Employee.builder()
                 .status(status)
+//                .updateTime(LocalDateTime.now())
+//                .updateUser(BaseContext.getCurrentId())
                 .id(id)
                 .build();
 
@@ -151,9 +153,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = new Employee();
         //2、将参数员工对象属性复制到当前对象
         BeanUtils.copyProperties(employeeDTO, employee);
-        //3、设置修改时间、修改人
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        //3、设置修改时间、修改人
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
         //4、执行修改
         employeeMapper.update(employee);
     }
