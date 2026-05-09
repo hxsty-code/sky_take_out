@@ -37,3 +37,13 @@ sky:
     admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+  # 阿里云OSS配置
+  alioss:
+    # 存储空间地址
+    endpoint: ${sky.alioss.endpoint}
+    # 访问密钥ID
+    access-key-id: ${sky.alioss.access-key-id}
+    # 访问密钥
+    access-key-secret: ${sky.alioss.access-key-secret}
+    # 存储空间名称
+    bucket-name: ${sky.alioss.bucket-name}
