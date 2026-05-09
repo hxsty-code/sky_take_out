@@ -8,7 +8,8 @@ sky:
     password: REPLACED_DB_PASSWORD
 
   alioss:
-    endpoint: oss-cn-beijing.aliyuncs.com
+    endpoint: https://oss-cn-beijing.aliyuncs.com
     access-key-id: REPLACED_ACCESS_KEY_ID
     access-key-secret: REPLACED_ACCESS_KEY_SECRET
     bucket-name: hxsty-java
+
