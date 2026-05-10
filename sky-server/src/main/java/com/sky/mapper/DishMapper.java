@@ -5,12 +5,13 @@ import com.sky.annotation.AutoFill;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
-import com.sky.result.PageResult;
 import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface DishMapper {
@@ -28,7 +29,7 @@ public interface DishMapper {
      * @param dish
      */
     @Insert("insert into dish (name, category_id, price, status, create_time, update_time, create_user, update_user, image, description) " +
-    "values (#{name},#{categoryId},#{price},#{status},#{createTime},#{updateTime},#{createUser},#{updateUser},#{image},#{description})")
+            "values (#{name},#{categoryId},#{price},#{status},#{createTime},#{updateTime},#{createUser},#{updateUser},#{image},#{description})")
     @Options(useGeneratedKeys = true, keyProperty = "id")   // 设置主键返回
     @AutoFill(value = OperationType.INSERT)
     void insert(Dish dish);
@@ -39,4 +40,33 @@ public interface DishMapper {
      * @return
      */
     Page<DishVO> pageQuery(DishPageQueryDTO dishPageQueryDTO);
+
+    /**
+     * 根据id查询菜品
+     * @param id
+     * @return
+     */
+    //select * from dish where id = ?
+    @Select("select * from dish where id = #{id}")
+    Dish getById(Long id);
+
+    /**
+     * 批量删除菜品
+     * @param ids
+     */
+    //delete from dish where id in (?,?,?)
+    void delete(List<Long> ids);
+
+    /**
+     * 根据id查询菜品和口味
+     * @param id
+     * @return
+     */
+    DishVO queryById(Long id);
+
+    /**
+     * 修改菜品
+     * @param dish
+     */
+    void update(Dish dish);
 }
