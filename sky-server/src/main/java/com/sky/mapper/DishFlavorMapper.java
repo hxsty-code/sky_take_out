@@ -22,4 +22,10 @@ public interface DishFlavorMapper {
      */
     //delete from dish_flavor where dish_id in (?,?,?)
     void deleteByDishId(List<Long> ids);
+
+    /**
+     * 根据菜品id查询对应的口味数据
+     */
+    //select * from dish_flavor where dish_id = ?
+    List<DishFlavor> queryByDishId(Long id);
 }

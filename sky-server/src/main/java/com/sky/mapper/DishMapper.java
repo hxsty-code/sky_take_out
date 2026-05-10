@@ -56,4 +56,17 @@ public interface DishMapper {
      */
     //delete from dish where id in (?,?,?)
     void delete(List<Long> ids);
+
+    /**
+     * 根据id查询菜品和口味
+     * @param id
+     * @return
+     */
+    DishVO queryById(Long id);
+
+    /**
+     * 修改菜品
+     * @param dish
+     */
+    void update(Dish dish);
 }

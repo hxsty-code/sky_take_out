@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.DishMapper">
-    
+
     <!-- 批量删除 -->
     <delete id="delete">
         delete from dish where id in
@@ -38,4 +38,36 @@
         </where>
         order by d.create_time desc
     </select>
+
+    <select id="queryById" resultType="com.sky.vo.DishVO">
+        select d.id,
+        d.name,
+        d.category_id as categoryId,
+        d.price,
+        d.image,
+        d.description,
+        d.status,
+        d.update_time as updateTime,
+        c.name as categoryName
+        from dish d
+        left join category c on d.category_id = c.id
+        where d.id = #{id}
+    </select>
+
+
+    <update id="update">
+        update dish
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+        </set>
+        where id = #{id}
+    </update>
+
 </mapper>
