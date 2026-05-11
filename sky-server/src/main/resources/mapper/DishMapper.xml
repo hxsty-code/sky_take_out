@@ -54,7 +54,6 @@
         where d.id = #{id}
     </select>
 
-
     <update id="update">
         update dish
         <set>
@@ -69,5 +68,19 @@
         </set>
         where id = #{id}
     </update>
+
+
+    <select id="list" resultType="com.sky.vo.DishVO">
+        select * from dish
+            <where>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            </where>
+        order by create_time desc
+    </select>
 
 </mapper>
