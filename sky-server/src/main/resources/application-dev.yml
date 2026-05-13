@@ -13,3 +13,8 @@ sky:
     access-key-secret: REPLACED_ACCESS_KEY_SECRET
     bucket-name: hxsty-java
 
+  redis:
+    host: localhost
+    port: 6379
+    password: 
+    database: 0
