@@ -70,7 +70,7 @@
     </update>
 
 
-    <select id="list" resultType="com.sky.vo.DishVO">
+    <select id="list" resultType="com.sky.entity.Dish">
         select * from dish
             <where>
             <if test="categoryId != null">
