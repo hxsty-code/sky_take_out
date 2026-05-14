@@ -43,6 +43,14 @@ sky:
     # 设置前端传递过来的令牌名称
     admin-token-name: token
 
+    user-secret-key: itcast
+    user-ttl: 7200000
+    user-token-name: authenticaton
+
+  wechat:
+    app-id: ${sky.wechat.app-id}
+    app-secret: ${sky.wechat.app-secret}
+
 
   # 阿里云OSS配置
   alioss:
