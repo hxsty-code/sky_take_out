@@ -23,6 +23,7 @@ public class ShopCartController {
      */
     @PostMapping("/add")
     public Result add(@RequestBody ShoppingCartDTO shoppingCartDTO) {
+        log.info("添加购物车：{}",shoppingCartDTO);
         shoppingCartService.add(shoppingCartDTO);
         return Result.success();
     }
@@ -33,6 +34,7 @@ public class ShopCartController {
      */
     @GetMapping("/list")
     public Result<List<ShoppingCart>>list() {
+        log.info("查看购物车");
         List<ShoppingCart> list = shoppingCartService.showShoppingCart();
         return Result.success(list);
     }
@@ -43,7 +45,20 @@ public class ShopCartController {
      */
     @DeleteMapping("/clean")
     public Result clean() {
+        log.info("清空购物车");
         shoppingCartService.cleanShoppingCart();
+        return Result.success();
+    }
+
+    /**
+     * 删除购物车一条记录
+     * @param shoppingCartDTO
+     * @return
+     */
+    @PostMapping("/sub")
+    public Result delete(@RequestBody ShoppingCartDTO shoppingCartDTO){
+        log.info("删除购物车一条记录：{}",shoppingCartDTO);
+        shoppingCartService.deleteShoppingCart(shoppingCartDTO);
         return Result.success();
     }
 }
