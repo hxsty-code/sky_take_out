@@ -160,18 +160,19 @@ public class OrderServiceImpl implements OrderService {
     public PageResult pageQuery(OrdersPageQueryDTO ordersPageQueryDTO) {
 
         PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
-        List<Orders> orderslist= orderMapper.pageQuery(ordersPageQueryDTO);
+        List<Orders> orderslist= orderMapper.pageQuery(ordersPageQueryDTO); //查询订单
         
         if (orderslist != null && !orderslist.isEmpty()) {
             List<Long> orderIds = orderslist.stream()
-                    .map(Orders::getId)
-                    .collect(Collectors.toList());
+                    .map(Orders::getId)             // 获取订单id
+                    .collect(Collectors.toList());  // 将订单id列表转换为流
             // 根据订单id批量查询订单详情
             List<OrderDetail> allOrderDetails = orderDetailMapper.listByOrderIds(orderIds);
-            
-            Map<Long, List<OrderDetail>> detailMap = allOrderDetails.stream()
-                    .collect(Collectors.groupingBy(OrderDetail::getOrderId));
-            
+
+                // 将订单详情根据订单id进行分组
+                Map<Long, List<OrderDetail>> detailMap = allOrderDetails.stream()
+                        .collect(Collectors.groupingBy(detail -> detail.getOrderId()));
+
             orderslist.forEach(order -> 
                 order.setOrderDetailList(detailMap.getOrDefault(order.getId(), new ArrayList<>()))
             );
