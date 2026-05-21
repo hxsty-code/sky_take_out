@@ -40,4 +40,22 @@
         </set>
         where id = #{id}
     </update>
+
+
+    <select id="pageQuery" resultType="com.sky.entity.Orders">
+        select * from orders
+        <where>
+            <if test="status != null and status != ''">
+                and status like '%${status}%'
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone like '%${phone}%'
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id like '%${userId}%'
+            </if>
+        </where>
+        order by order_time desc
+    </select>
+
 </mapper>

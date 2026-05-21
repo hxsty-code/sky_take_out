@@ -1,13 +1,15 @@
 package com.sky.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.*;
-import com.sky.exception.OrderBusinessException;
 import com.sky.mapper.*;
+import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
@@ -18,10 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -147,5 +150,34 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+    }
+
+    /**
+     * 历史订单列表
+     * @return
+     */
+    @Override
+    public PageResult pageQuery(OrdersPageQueryDTO ordersPageQueryDTO) {
+
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+        List<Orders> orderslist= orderMapper.pageQuery(ordersPageQueryDTO);
+        
+        if (orderslist != null && !orderslist.isEmpty()) {
+            List<Long> orderIds = orderslist.stream()
+                    .map(Orders::getId)
+                    .collect(Collectors.toList());
+            // 根据订单id批量查询订单详情
+            List<OrderDetail> allOrderDetails = orderDetailMapper.listByOrderIds(orderIds);
+            
+            Map<Long, List<OrderDetail>> detailMap = allOrderDetails.stream()
+                    .collect(Collectors.groupingBy(OrderDetail::getOrderId));
+            
+            orderslist.forEach(order -> 
+                order.setOrderDetailList(detailMap.getOrDefault(order.getId(), new ArrayList<>()))
+            );
+        }
+        
+        Page<Orders> page = (Page<Orders>) orderslist;
+        return new PageResult(page.getTotal(), page.getResult());
     }
 }
