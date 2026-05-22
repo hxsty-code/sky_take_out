@@ -40,10 +40,6 @@ public class OrderServiceImpl implements OrderService {
     private AddressBookMapper addressBookMapper;
     @Autowired
     private ShoppingCartMapper shoppingCartMapper;
-    @Autowired
-    private WeChatPayUtil weChatPayUtil;
-    @Autowired
-    private UserMapper userMapper;
     /**
      * 用户下单
      * @param ordersSubmitDTO
@@ -76,7 +72,8 @@ public class OrderServiceImpl implements OrderService {
         orders.setNumber(String.valueOf(System.currentTimeMillis()));
         orders.setPhone(addressBook.getPhone());
         orders.setConsignee(addressBook.getConsignee());
-
+        orders.setAddress(addressBook.getProvinceName() + addressBook.getCityName()
+                + addressBook.getDistrictName() + addressBook.getDetail());
         orderMapper.insert(orders);
 
         List<OrderDetail> orderDetailList = new ArrayList<>();
@@ -214,5 +211,38 @@ public class OrderServiceImpl implements OrderService {
         orderVO.setOrderDetailList(orderDetailList);
 
         return orderVO;
+    }
+
+    /**
+     * 用户取消订单
+     * @param id
+     */
+    @Override
+    public void userCancelById(Long id) {
+        Orders ordersDB = orderMapper.getById(id);
+        // 判断订单是否存在
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        //订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
+        if (ordersDB.getStatus() > 2) {
+            //当订单状态大于2时，不可取消订单
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        Orders orders = new Orders();
+        orders.setId(ordersDB.getId());
+
+        // 订单处于待接单状态下取消，需要进行退款
+        if (ordersDB.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
+            orders.setPayStatus(Orders.REFUND);
+        }
+
+        // 更新订单状态、取消原因、取消时间
+        orders.setStatus(Orders.CANCELLED);
+        orders.setCancelReason("用户取消");
+        orders.setCancelTime(LocalDateTime.now());
+        orderMapper.update(orders);
     }
 }
