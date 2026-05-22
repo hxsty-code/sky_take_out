@@ -8,12 +8,14 @@ import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.*;
+import com.sky.exception.OrderBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * 历史订单列表
+     * 历史订单查询
      * @return
      */
     @Override
@@ -173,12 +175,44 @@ public class OrderServiceImpl implements OrderService {
                 Map<Long, List<OrderDetail>> detailMap = allOrderDetails.stream()
                         .collect(Collectors.groupingBy(detail -> detail.getOrderId()));
 
-            orderslist.forEach(order -> 
-                order.setOrderDetailList(detailMap.getOrDefault(order.getId(), new ArrayList<>()))
-            );
+//            orderslist.forEach(order ->
+//                 order.setOrderDetailList(detailMap.getOrDefault(order.getId(), new ArrayList<>()))
+//            );
+            // 将订单详情设置到对应的订单对象中
+            for (Orders order : orderslist) {
+                Long orderId = order.getId();
+                List<OrderDetail> details = detailMap.get(orderId);
+                // 如果订单详情为空，则创建一个空列表
+                if (details == null) {
+                    details = new ArrayList<>();
+                }
+                order.setOrderDetailList(details);
+            }
         }
         
         Page<Orders> page = (Page<Orders>) orderslist;
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 订单详情
+     * @param id
+     * @return
+     */
+    @Override
+    public OrderVO details(Long id) {
+        //1、根据id查询订单
+        Orders orders = orderMapper.getById(id);
+        if (orders == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        //2、根据订单id查询订单详情
+        List<OrderDetail> orderDetailList = orderDetailMapper.listByOrderId(id);
+        //3、组装VO
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(orders, orderVO);
+        orderVO.setOrderDetailList(orderDetailList);
+
+        return orderVO;
     }
 }
