@@ -45,14 +45,23 @@
     <select id="pageQuery" resultType="com.sky.entity.Orders">
         select * from orders
         <where>
-            <if test="status != null and status != ''">
-                and status like '%${status}%'
+            <if test="status != null">
+                and status = #{status}
             </if>
             <if test="phone != null and phone != ''">
-                and phone like '%${phone}%'
+                and phone like concat('%', #{phone}, '%')
             </if>
-            <if test="userId != null and userId != ''">
-                and user_id like '%${userId}%'
+            <if test="number != null and number != ''">
+                and number like concat('%', #{number}, '%')
+            </if>
+            <if test="beginTime != null">
+                and order_time >= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and order_time &lt;= #{endTime}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
             </if>
         </where>
         order by order_time desc
