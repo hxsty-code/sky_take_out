@@ -72,4 +72,19 @@ public interface OrderService {
      * 拒单
      */
     void rejection(OrdersRejectionDTO ordersRejectionDTO);
+
+    /**
+     * 取消订单
+     */
+    void cancel(OrdersCancelDTO ordersCancelDTO);
+
+    /**
+     * 派送订单
+     */
+    void delivery(Long id);
+
+    /**
+     * 完成订单
+     */
+    void complete(Long id);
 }
