@@ -1,6 +1,9 @@
 package com.sky.controller.admin;
 
+import com.sky.dto.OrdersCancelDTO;
+import com.sky.dto.OrdersConfirmDTO;
 import com.sky.dto.OrdersPageQueryDTO;
+import com.sky.dto.OrdersRejectionDTO;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
@@ -39,5 +42,37 @@ public class OrderController {
     public Result<OrderStatisticsVO> statistics(){
         OrderStatisticsVO orderStatisticsVO = orderService.statistics();
         return Result.success(orderStatisticsVO);
+    }
+
+    /**
+     * 查询订单详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/details/{id}")
+    public Result<OrderVO> getById(@PathVariable Long id) {
+        OrderVO details = orderService.details(id);
+        return Result.success(details);
+    }
+
+    /**
+     * 接单
+     * @return
+     */
+    @PutMapping("/confirm")
+    public Result confirm(@RequestBody OrdersConfirmDTO ordersConfirmDTO){
+        orderService.confirm(ordersConfirmDTO);
+        return Result.success();
+    }
+
+    /**
+     * 拒单
+     * @param ordersRejectionDTO
+     * @return
+     */
+    @PutMapping("/rejection")
+    public Result rejection(@RequestBody OrdersRejectionDTO ordersRejectionDTO){
+        orderService.rejection(ordersRejectionDTO);
+        return Result.success();
     }
 }
