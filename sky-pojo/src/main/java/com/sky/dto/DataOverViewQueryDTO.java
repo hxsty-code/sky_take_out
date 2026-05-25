@@ -18,4 +18,6 @@ public class DataOverViewQueryDTO implements Serializable {
 
     private LocalDateTime end;
 
+    private Integer status;
+
 }
