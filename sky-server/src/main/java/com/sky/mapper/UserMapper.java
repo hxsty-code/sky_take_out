@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import com.sky.dto.DataOverViewQueryDTO;
 import com.sky.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -28,4 +29,11 @@ public interface UserMapper {
      */
     @Select("select * from user where id = #{userId}")
     User getById(Long userId);
+
+    /**
+     * 根据时间范围统计用户数量
+     * @param dataOverViewQueryDTO
+     * @return
+     */
+    Integer countByMap(DataOverViewQueryDTO dataOverViewQueryDTO);
 }
