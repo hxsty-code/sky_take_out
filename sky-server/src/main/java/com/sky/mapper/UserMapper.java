@@ -1,9 +1,10 @@
 package com.sky.mapper;
 
-import com.sky.dto.DataOverViewQueryDTO;
 import com.sky.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.Map;
 
 @Mapper
 public interface UserMapper {
@@ -32,8 +33,8 @@ public interface UserMapper {
 
     /**
      * 根据时间范围统计用户数量
-     * @param dataOverViewQueryDTO
+     * @param map
      * @return
      */
-    Integer countByMap(DataOverViewQueryDTO dataOverViewQueryDTO);
+    Integer countByMap(Map map);
 }

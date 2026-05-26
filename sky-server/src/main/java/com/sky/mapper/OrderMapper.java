@@ -70,17 +70,17 @@ public interface OrderMapper {
 
     /**
      * 根据动态条件统计营业额数据
-     * @param dataOverViewQueryDTO
+     * @param map
      * @return
      */
-    Double sumByMap(DataOverViewQueryDTO dataOverViewQueryDTO);
+    Double sumByMap(Map map);
 
     /**
      * 根据动态条件查询订单数据
-     * @param orderCountQuery
+     * @param map
      * @return
      */
-    Integer countByMap(DataOverViewQueryDTO orderCountQuery);
+    Integer countByMap(Map map);
 
     /**
      * 查询指定时间区间内的销量排名top10

@@ -8,7 +8,7 @@
         values (#{openid},#{name},#{phone},#{sex},#{idNumber},#{avatar},#{createTime})
     </insert>
 
-    <select id="countByMap" resultType="java.lang.Integer" parameterType="com.sky.dto.DataOverViewQueryDTO">
+    <select id="countByMap" resultType="java.lang.Integer">
         select count(id) from user
         <where>
             <if test="begin != null">
@@ -19,4 +19,5 @@
             </if>
         </where>
     </select>
+
 </mapper>
