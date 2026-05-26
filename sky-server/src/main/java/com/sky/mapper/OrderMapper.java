@@ -72,4 +72,11 @@ public interface OrderMapper {
      * @return
      */
     Double sumByMap(DataOverViewQueryDTO dataOverViewQueryDTO);
+
+    /**
+     * 根据动态条件查询订单数据
+     * @param orderCountQuery
+     * @return
+     */
+    Integer countByMap(DataOverViewQueryDTO orderCountQuery);
 }
