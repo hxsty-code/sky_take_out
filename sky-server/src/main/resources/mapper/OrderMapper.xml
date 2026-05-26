@@ -66,7 +66,7 @@
         </where>
         order by order_time desc
     </select>
-    <select id="sumByMap" resultType="java.lang.Double" parameterType="com.sky.dto.DataOverViewQueryDTO">
+    <select id="sumByMap" resultType="java.lang.Double" parameterType="java.util.Map">
         select sum(amount) from orders
         <where>
             <if test="begin !=null">
@@ -80,7 +80,7 @@
             </if>
         </where>
     </select>
-    <select id="countByMap" resultType="java.lang.Integer" parameterType="com.sky.dto.DataOverViewQueryDTO">
+    <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(id) from orders
         <where>
             <if test="begin !=null">

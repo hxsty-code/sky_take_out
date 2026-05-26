@@ -54,16 +54,15 @@ public class ReportServiceImpl implements ReportService {
         // 当前集合用于存放从begin到end的每天日期对应的营业额
         List<Double> turnoverList = new ArrayList<>();
         for(LocalDate date : dateList){
-            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);    // 一天的开始时间
-            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);      // 一天的结束时间
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
             // 查询对应的营业额并添加到集合中
-            DataOverViewQueryDTO dataOverViewQueryDTO = DataOverViewQueryDTO.builder()
-                    .begin(beginTime)
-                    .end(endTime)
-                    .status(Orders.COMPLETED)
-                    .build();
+            Map<String, Object> turnoverMap = new HashMap<>();
+            turnoverMap.put("begin", beginTime);
+            turnoverMap.put("end", endTime);
+            turnoverMap.put("status", Orders.COMPLETED);
             // select sum(amount) from orders where order_time > begin and order_time < end and status = 5
-            Double turnover = orderMapper.sumByMap(dataOverViewQueryDTO);
+            Double turnover = orderMapper.sumByMap(turnoverMap);
             turnoverList.add(turnover == null ? 0.0 : turnover);
         }
 
@@ -98,21 +97,19 @@ public class ReportServiceImpl implements ReportService {
         List<Integer> totalUserList = new ArrayList<>();    // 用户总数
 
         for (LocalDate date : dateList) {
-            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);    // 一天的开始时间
-            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);      // 一天的结束时间
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
             
-            // 统计当天新增用户：select count(id) from user where create_time > beginTime and create_time < endTime
-            DataOverViewQueryDTO newUserQuery = DataOverViewQueryDTO.builder()
-                    .begin(beginTime)
-                    .end(endTime)
-                    .build();
-            Integer newUser = userMapper.countByMap(newUserQuery);
+            // 统计当天新增用户
+            Map<String, Object> newUserMap = new HashMap<>();
+            newUserMap.put("begin", beginTime);
+            newUserMap.put("end", endTime);
+            Integer newUser = userMapper.countByMap(newUserMap);
             
-            // 统计截至当天的总用户数：select count(id) from user where create_time < endTime
-            DataOverViewQueryDTO totalUserQuery = DataOverViewQueryDTO.builder()
-                    .end(endTime)
-                    .build();
-            Integer totalUser = userMapper.countByMap(totalUserQuery);
+            // 统计截至当天的总用户数
+            Map<String, Object> totalUserMap = new HashMap<>();
+            totalUserMap.put("end", endTime);
+            Integer totalUser = userMapper.countByMap(totalUserMap);
 
             newUserList.add(newUser);
             totalUserList.add(totalUser);
@@ -149,21 +146,22 @@ public class ReportServiceImpl implements ReportService {
         List<Integer> validOrderCountList = new ArrayList<>();  // 每日有效订单数
 
         for (LocalDate date : dateList) {
-            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);    // 一天的开始时间
-            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);      // 一天的结束时间
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
+            
             // 订单数
-            DataOverViewQueryDTO orderCountQuery = DataOverViewQueryDTO.builder()
-                    .begin(beginTime)
-                    .end(endTime)
-                    .build();
-            //有效订单数
-            DataOverViewQueryDTO validOrderCountQuery = DataOverViewQueryDTO.builder()
-                    .begin(beginTime)
-                    .end(endTime)
-                    .status(Orders.COMPLETED)
-                    .build();
-            Integer orderCount = orderMapper.countByMap(orderCountQuery);
-            Integer validOrderCount = orderMapper.countByMap(validOrderCountQuery);
+            Map<String, Object> orderCountMap = new HashMap<>();
+            orderCountMap.put("begin", beginTime);
+            orderCountMap.put("end", endTime);
+            
+            // 有效订单数
+            Map<String, Object> validOrderCountMap = new HashMap<>();
+            validOrderCountMap.put("begin", beginTime);
+            validOrderCountMap.put("end", endTime);
+            validOrderCountMap.put("status", Orders.COMPLETED);
+            
+            Integer orderCount = orderMapper.countByMap(orderCountMap);
+            Integer validOrderCount = orderMapper.countByMap(validOrderCountMap);
 
             orderCountList.add(orderCount);
             validOrderCountList.add(validOrderCount);
