@@ -1,10 +1,12 @@
 package com.sky.service.impl;
 
+import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.ShoppingCart;
+import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.mapper.ShoppingCartMapper;
@@ -49,12 +51,24 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             if (dishId != null) {
                 // 添加的是菜品
                 Dish dish = dishMapper.getById(dishId);
+                
+                // 检查菜品是否停售
+                if (dish == null || dish.getStatus().equals(StatusConstant.DISABLE)) {
+                    throw new ShoppingCartBusinessException("菜品已停售，无法加入购物车");
+                }
+                
                 shoppingcart.setName(dish.getName());
                 shoppingcart.setImage(dish.getImage());
                 shoppingcart.setAmount(dish.getPrice());
             }else{
                 // 添加的是套餐
                 Setmeal setmeal = setmealMapper.getById(shoppingcart.getSetmealId());
+                
+                // 检查套餐是否停售
+                if (setmeal == null || setmeal.getStatus().equals(StatusConstant.DISABLE)) {
+                    throw new ShoppingCartBusinessException("套餐已停售，无法加入购物车");
+                }
+                
                 shoppingcart.setName(setmeal.getName());
                 shoppingcart.setImage(setmeal.getImage());
                 shoppingcart.setAmount(setmeal.getPrice());
