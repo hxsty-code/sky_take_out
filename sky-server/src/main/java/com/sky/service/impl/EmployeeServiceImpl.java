@@ -13,6 +13,8 @@ import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
+import com.sky.exception.PasswordEditFailedException;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
@@ -158,6 +160,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        employee.setUpdateUser(BaseContext.getCurrentId());
         //4、执行修改
         employeeMapper.update(employee);
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param passwordEditDTO
+     */
+    @Override
+    public void editPassword(PasswordEditDTO passwordEditDTO) {
+        //1、从上下文中获取当前登录员工ID
+        Long empId = BaseContext.getCurrentId();
+        
+        //2、根据员工id查询员工信息
+        Employee employee = employeeMapper.queryById(empId);
+        if (employee == null) {
+            throw new PasswordEditFailedException(MessageConstant.ACCOUNT_NOT_FOUND);
+        }
+
+        //3、验证旧密码是否正确
+        String oldPassword = DigestUtils.md5DigestAsHex(passwordEditDTO.getOldPassword().getBytes());
+        if (!oldPassword.equals(employee.getPassword())) {
+            throw new PasswordEditFailedException(MessageConstant.PASSWORD_ERROR);
+        }
+
+        //4、更新新密码
+        Employee newEmployee = Employee.builder()
+                .id(empId)
+                .password(DigestUtils.md5DigestAsHex(passwordEditDTO.getNewPassword().getBytes()))
+                .build();
+        employeeMapper.update(newEmployee);
     }
 
 }
