@@ -1,24 +1,30 @@
+# 这个文件不再保存任何真实的密码和密钥，所有敏感值都从环境变量读取。
+# 本地运行前，在 IDEA 的 Run/Debug Configurations -> Environment variables 里配置：
+#   SKY_DB_USERNAME / SKY_DB_PASSWORD
+#   SKY_OSS_ACCESS_KEY_ID / SKY_OSS_ACCESS_KEY_SECRET
+#   SKY_WECHAT_APPID / SKY_WECHAT_SECRET
+# 冒号后面没写默认值的，就是必须自己配置的项。
 sky:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    host: localhost
-    port: 3306
-    database: sky_take_out
-    username: root
-    password: REPLACED_DB_PASSWORD
+    host: ${SKY_DB_HOST:localhost}
+    port: ${SKY_DB_PORT:3306}
+    database: ${SKY_DB_NAME:sky_take_out}
+    username: ${SKY_DB_USERNAME:root}
+    password: ${SKY_DB_PASSWORD}
 
   alioss:
-    endpoint: oss-cn-beijing.aliyuncs.com
-    access-key-id: REPLACED_ACCESS_KEY_ID
-    access-key-secret: REPLACED_ACCESS_KEY_SECRET
-    bucket-name: hxsty-java
+    endpoint: ${SKY_OSS_ENDPOINT:oss-cn-beijing.aliyuncs.com}
+    access-key-id: ${SKY_OSS_ACCESS_KEY_ID}
+    access-key-secret: ${SKY_OSS_ACCESS_KEY_SECRET}
+    bucket-name: ${SKY_OSS_BUCKET_NAME}
 
   redis:
-    host: localhost
-    port: 6379
-    password: 
-    database: 0
+    host: ${SKY_REDIS_HOST:localhost}
+    port: ${SKY_REDIS_PORT:6379}
+    password: ${SKY_REDIS_PASSWORD:}
+    database: ${SKY_REDIS_DATABASE:0}
 
   wechat:
-    appid: REPLACED_WECHAT_APPID
-    secret: REPLACED_WECHAT_SECRET
+    appid: ${SKY_WECHAT_APPID}
+    secret: ${SKY_WECHAT_SECRET}

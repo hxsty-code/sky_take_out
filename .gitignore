@@ -4,3 +4,10 @@
 *.class
 *Test.java
 **/test/
+
+# 本地私有配置，不要提交到仓库
+.env
+*.env
+application-local.yml
+**/application-local.yml
+*.log
